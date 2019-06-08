@@ -17,8 +17,47 @@ public class AccountInfo implements Serializable {
     private String time;
     private String type;
     private int more;
-    private String urlOrstr;
+    private String str;
+    private String url;
 
+    public String getStr() {
+        return str;
+    }
+
+    public void setStr(String str) {
+        this.str = str;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
+    public AccountInfo(String useName, BigDecimal money, String time, String type, int more, String str) {
+        this.useName = useName;
+        this.money = money;
+        this.time = time;
+        this.type = type;
+        this.more = more;
+        if (more==0){
+            this.str=str;
+        }else if(more==1){
+            this.url=str;
+        }
+    }
+
+    public AccountInfo(String useName, BigDecimal money, String time, String type, int more, String str, String url) {
+        this.useName = useName;
+        this.money = money;
+        this.time = time;
+        this.type = type;
+        this.more = more;
+        this.str = str;
+        this.url = url;
+    }
     public static List<AccountInfo> get(){
         List<AccountInfo> list = new ArrayList<>();
         list.add(new AccountInfo("买菜",new BigDecimal("2.1"), String.valueOf(new Date().getTime()/1000),"支付宝"));
@@ -27,17 +66,7 @@ public class AccountInfo implements Serializable {
         list.add(new AccountInfo("阿萨德啊",new BigDecimal("3"), String.valueOf(new Date().getTime()/1000),"付宝"));
         return list;
     }
-    public AccountInfo() {
-    }
-
-    public AccountInfo(String useName, BigDecimal money, String time, String type, int more, String urlOrstr) {
-        this.useName = useName;
-        this.money = money;
-        this.time = time;
-        this.type = type;
-        this.more = more;
-        this.urlOrstr = urlOrstr;
-    }
+    public AccountInfo() { }
 
     public AccountInfo(String useName, BigDecimal money, String time, String type) {
         this.useName = useName;
@@ -84,13 +113,5 @@ public class AccountInfo implements Serializable {
 
     public void setMore(int more) {
         this.more = more;
-    }
-
-    public String getUrlOrstr() {
-        return urlOrstr;
-    }
-
-    public void setUrlOrstr(String urlOrstr) {
-        this.urlOrstr = urlOrstr;
     }
 }

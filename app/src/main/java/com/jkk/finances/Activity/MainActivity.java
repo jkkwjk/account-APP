@@ -1,6 +1,7 @@
 package com.jkk.finances.Activity;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
@@ -13,6 +14,7 @@ import android.view.MenuItem;
 import android.widget.TextView;
 
 import com.jkk.finances.Fragment.AccountAllFragment;
+import com.jkk.finances.Model.User;
 import com.jkk.finances.R;
 import com.jkk.finances.Utils.ToastShow;
 
@@ -33,7 +35,8 @@ public class MainActivity extends AppCompatActivity {
                     fm.beginTransaction().add(R.id.view_main_fragment_container,new AccountAllFragment()).commit();
                     return true;
                 case R.id.navigation_dashboard:
-                    mTextMessage.setText("新增账单");
+                    Intent intent = new Intent(MainActivity.this, AccountManageActivity.class);
+                    startActivityForResult(intent,2);
                     return true;
                 case R.id.navigation_notifications:
                     mTextMessage.setText("统计");
