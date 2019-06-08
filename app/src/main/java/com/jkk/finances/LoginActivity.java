@@ -60,15 +60,14 @@ public class LoginActivity extends AppCompatActivity {
                     String userName = editText_user.getText().toString();
                     String pwd = editText_pwd.getText().toString();
                     if (canSubmit(userName,pwd)){
-                        Cursor cursor = mDatabase.rawQuery("select uid from user where username=? and password=?",
+                        Cursor cursor = mDatabase.rawQuery("select username from user where username=? and password=?",
                                 new String[]{userName,DBHelper.getStringMD5(pwd)});
                         cursor.moveToFirst();
                         if (!cursor.isAfterLast()){
-                            Integer uid = Integer.parseInt(cursor.getColumnName(cursor.getColumnIndex("uid")));
                             cursor.close();
-                            successLogin(new User(uid,userName));
+                            successLogin(new User(userName));
                         }else {
-                            successLogin(new User(1,"1"));
+                            successLogin(new User("1")); //test
                             cursor.close();
                             ToastShow.show(context,"账号或密码错误");
                         }
@@ -79,6 +78,7 @@ public class LoginActivity extends AppCompatActivity {
                     Intent intent = new Intent();
                     intent.setClass(context, RegisterActivity.class);
                     startActivity(intent);
+                    finish();
                     break;
             }
         }

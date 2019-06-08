@@ -22,13 +22,13 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     public DBHelper(Context context){
-        super(context, "finances.db", null, 2);
+        super(context, "finances.db", null, 3);
     }
 
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL("create table user(uid primary key,password ,username)");
+        db.execSQL("create table user(password ,username)");
     }
 
     @Override
@@ -36,6 +36,8 @@ public class DBHelper extends SQLiteOpenHelper {
         if (oldVersion < newVersion){
             if (oldVersion == 1){
                 db.execSQL("alter table user add column username");
+            }else if (oldVersion == 2){
+
             }
             onUpgrade(db,oldVersion+1,newVersion);
         }

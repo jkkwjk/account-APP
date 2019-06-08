@@ -4,12 +4,15 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.BottomNavigationView;
+import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.widget.TextView;
 
+import com.jkk.finances.Fragment.AccountAllFragment;
 import com.jkk.finances.R;
 import com.jkk.finances.Utils.ToastShow;
 
@@ -19,6 +22,7 @@ public class MainActivity extends AppCompatActivity {
     private Long exitTime = 0L;
     private TextView mTextMessage;
 
+    private FragmentManager fm;
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
 
@@ -26,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.navigation_home:
-                    mTextMessage.setText("全部信息");
+                    fm.beginTransaction().add(R.id.fragment_container,new AccountAllFragment()).commit();
                     return true;
                 case R.id.navigation_dashboard:
                     mTextMessage.setText("新增账单");
@@ -45,7 +49,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         this.context = this;
-        mTextMessage = (TextView) findViewById(R.id.message);
+        fm = getSupportFragmentManager();
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
     }
