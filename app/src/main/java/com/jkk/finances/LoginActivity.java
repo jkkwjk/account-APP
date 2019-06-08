@@ -2,6 +2,7 @@ package com.jkk.finances;
 
 import android.content.Context;
 import android.content.Intent;
+import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -9,11 +10,12 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.jkk.finances.Activity.MainActivity;
+import com.jkk.finances.Tools.DBHelper;
 import com.jkk.finances.Utils.ToastShow;
 
 public class LoginActivity extends AppCompatActivity {
     private Context context;
-
+    private SQLiteDatabase mDatabase;
     private Button button_login;
     private Button button_register;
 
@@ -53,6 +55,7 @@ public class LoginActivity extends AppCompatActivity {
                     String userName = editText_user.getText().toString();
                     String pwd = editText_pwd.getText().toString();
                     if (canSubmit(userName,pwd)){
+                        DBHelper dbHelper = new DBHelper(context);
                         // TODO: 2019/6/7 数据库验证
                         Intent intent = new Intent();
                         intent.setClass(context, MainActivity.class);
