@@ -11,7 +11,7 @@
         android:layout_width="413dp"
         android:layout_height="20dp"
         android:layout_marginTop="10dp"
-        android:text="在这里添加一项账单"
+        android:text=""
         android:textAlignment="center"
         android:textSize="18sp"
         app:layout_constraintEnd_toEndOf="parent"
@@ -23,7 +23,7 @@
         android:layout_width="100dp"
         android:layout_height="30dp"
         android:layout_marginTop="25dp"
-        android:text="账单名称"
+        android:text="账单名称:"
         android:textAlignment="center"
         android:textSize="18sp"
         app:layout_constraintStart_toStartOf="parent"
@@ -35,36 +35,64 @@
         android:layout_height="40dp"
         android:layout_marginStart="20dp"
         android:layout_marginTop="18dp"
-        app:layout_constraintStart_toEndOf="@+id/textView10"
-        app:layout_constraintTop_toBottomOf="@+id/edit_account_type" />
+        android:hint="输入一个合适的名称"
+        android:singleLine="true"
+        app:layout_constraintStart_toEndOf="@+id/textView7"
+        app:layout_constraintTop_toBottomOf="@+id/textView_account_text" />
 
     <TextView
         android:id="@+id/textView8"
         android:layout_width="100dp"
         android:layout_height="30dp"
         android:layout_marginTop="30dp"
-        android:text="支付类型"
+        android:text="支付类型:"
         android:textAlignment="center"
         android:textSize="18sp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/textView7" />
 
-    <EditText
-        android:id="@+id/edit_account_type"
+    <RadioGroup
+        android:id="@+id/RG_account_type"
         android:layout_width="280dp"
         android:layout_height="40dp"
         android:layout_marginStart="20dp"
-        android:layout_marginTop="22dp"
+        android:layout_marginTop="26dp"
+        android:orientation="horizontal"
         app:layout_constraintStart_toEndOf="@+id/textView8"
-        app:layout_constraintTop_toBottomOf="@+id/edit_account_money" />
+        app:layout_constraintTop_toBottomOf="@+id/edit_account_name">
 
+        <RadioButton
+            android:id="@+id/RB_account_1"
+            android:layout_width="80dp"
+            android:layout_height="30dp"
+            android:checked="true"
+            android:text="支付宝" />
+
+        <RadioButton
+            android:id="@+id/RB_account_2"
+            android:layout_width="60dp"
+            android:layout_height="30dp"
+            android:text="微信" />
+
+        <RadioButton
+            android:id="@+id/RB_account_3"
+            android:layout_width="80dp"
+            android:layout_height="30dp"
+            android:text="信用卡" />
+
+        <RadioButton
+            android:id="@+id/RB_account_4"
+            android:layout_width="80dp"
+            android:layout_height="30dp"
+            android:text="现金" />
+    </RadioGroup>
 
     <TextView
         android:id="@+id/textView10"
         android:layout_width="100dp"
         android:layout_height="30dp"
         android:layout_marginTop="30dp"
-        android:text="账单金额"
+        android:text="账单金额:"
         android:textAlignment="center"
         android:textSize="18sp"
         app:layout_constraintStart_toStartOf="parent"
@@ -75,9 +103,11 @@
         android:layout_width="280dp"
         android:layout_height="40dp"
         android:layout_marginStart="20dp"
-        android:layout_marginTop="21dp"
-        app:layout_constraintStart_toEndOf="@+id/textView7"
-        app:layout_constraintTop_toBottomOf="@+id/textView_account_text" />
+        android:layout_marginTop="16dp"
+        android:hint="输入消费金额"
+        android:singleLine="true"
+        app:layout_constraintStart_toEndOf="@+id/textView10"
+        app:layout_constraintTop_toBottomOf="@+id/RG_account_type" />
 
     <EditText
         android:id="@+id/edit_account_descripe"
@@ -96,7 +126,7 @@
         android:layout_width="120dp"
         android:layout_height="50dp"
         android:layout_marginStart="50dp"
-        android:layout_marginTop="44dp"
+        android:layout_marginTop="30dp"
         android:text="返回"
         android:textSize="18sp"
         app:layout_constraintStart_toStartOf="parent"
@@ -106,7 +136,7 @@
         android:id="@+id/button_account_submit"
         android:layout_width="120dp"
         android:layout_height="50dp"
-        android:layout_marginTop="44dp"
+        android:layout_marginTop="30dp"
         android:layout_marginEnd="50dp"
         android:text="确认"
         android:textSize="18sp"
@@ -118,7 +148,7 @@
         android:layout_width="100dp"
         android:layout_height="30dp"
         android:layout_marginTop="30dp"
-        android:text="日         期"
+        android:text="日         期:"
         android:textAlignment="center"
         android:textSize="18sp"
         app:layout_constraintStart_toStartOf="parent"
@@ -130,7 +160,10 @@
         android:layout_height="40dp"
         android:layout_marginStart="20dp"
         android:layout_marginTop="18dp"
+        android:hint="请选择日期"
+        android:enabled="false"
+        android:singleLine="true"
         app:layout_constraintStart_toEndOf="@+id/textView13"
-        app:layout_constraintTop_toBottomOf="@+id/edit_account_name" />
+        app:layout_constraintTop_toBottomOf="@+id/edit_account_money" />
 
 </android.support.constraint.ConstraintLayout>
