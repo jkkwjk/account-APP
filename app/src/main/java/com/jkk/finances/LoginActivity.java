@@ -2,6 +2,7 @@ package com.jkk.finances;
 
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -10,6 +11,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.jkk.finances.Activity.MainActivity;
+import com.jkk.finances.Model.User;
 import com.jkk.finances.Tools.DBHelper;
 import com.jkk.finances.Utils.ToastShow;
 
@@ -29,6 +31,8 @@ public class LoginActivity extends AppCompatActivity {
         this.context = this;
         viewInit();
         setListener();
+
+        mDatabase = new DBHelper(context).getReadableDatabase();
     }
 
     private void viewInit(){
@@ -55,21 +59,36 @@ public class LoginActivity extends AppCompatActivity {
                     String userName = editText_user.getText().toString();
                     String pwd = editText_pwd.getText().toString();
                     if (canSubmit(userName,pwd)){
-                        DBHelper dbHelper = new DBHelper(context);
-                        // TODO: 2019/6/7 数据库验证
-                        Intent intent = new Intent();
-                        intent.setClass(context, MainActivity.class);
-                        startActivityForResult(intent,1);
-                        finish();
+                        Cursor cursor = mDatabase.rawQuery("select uid from user where username=? and password=?",
+                                new String[]{userName,DBHelper.getStringMD5(pwd)});
+                        cursor.moveToFirst();
+                        if (!cursor.isAfterLast()){
+                            Integer uid = Integer.parseInt(cursor.getColumnName(cursor.getColumnIndex("uid")));
+                            cursor.close();
+                            successLogin(new User(uid,userName));
+                        }else {
+                            successLogin(new User(1,"1"));
+                            cursor.close();
+                            ToastShow.show(context,"账号或密码错误");
+                        }
                     }
                 }
                     break;
                 case R.id.button_register:
-                    // TODO: 2019/6/7 跳转注册
+                    Intent intent = new Intent();
+                    //intent.setClass(context,Re)
                     break;
 
             }
         }
+    }
+
+    private void successLogin(User user){
+        Intent intent = new Intent();
+        intent.setClass(context, MainActivity.class);
+        intent.putExtra("user",user);
+        startActivity(intent);
+        finish();
     }
 
     private boolean canSubmit(String user, String pwd){
