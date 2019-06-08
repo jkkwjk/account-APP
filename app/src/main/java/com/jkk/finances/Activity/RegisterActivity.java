@@ -1,5 +1,6 @@
 package com.jkk.finances.Activity;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
@@ -45,22 +46,31 @@ public class RegisterActivity extends AppCompatActivity {
         button_register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String user=editText_username.getText().toString();
+                String name=editText_username.getText().toString();
                 String password=editText_password.getText().toString();
-                if(user.equals("")||password.equals(""))
+                if(name.equals("")||password.equals(""))
                 {
                     ToastShow.show(context,"用户名和密码不能为空");
                 }
                 else
                     {
-                        boolean exist=find(mDatabase,user);
-                        if(!exist)
+                        boolean exist=find(mDatabase,name);
+                        if(exist)
                         {
                             ToastShow.show(context,"用户名已存在");
                         }
                         else
                             {
-
+                                if (add(mDatabase,name,password)){
+                                    ToastShow.show(context,"注册成功，欢迎您的加入");
+                                    Intent intent = new Intent(RegisterActivity.this, MainActivity.class);
+                                    startActivity(intent);
+                                    RegisterActivity.this.finish();
+                                }
+                                else
+                                    {
+                                        ToastShow.show(context,"注册失败，请重新填写信息");
+                                    }
                             }
                     }
             }
@@ -72,13 +82,24 @@ public class RegisterActivity extends AppCompatActivity {
 
         Cursor cursor = mDatabase.rawQuery("select username from user where username = ?", new String[]{name});
         if (cursor.moveToNext()) {
+            mDatabase.close();
             return true;
         }
+        mDatabase.close();
         return false;
     }
 
-    public static boolean add(SQLiteDatabase mDatabase,String name){
-
+    public static boolean add(SQLiteDatabase mDatabase,String name,String password){
+        ContentValues values = new ContentValues();
+        values.put("username",name);
+        values.put("password",password);
+        long rowID=mDatabase.insert("user",null,values);
+        if(rowID!=-1)
+        {
+            mDatabase.close();
+            return true;
+        }
+        mDatabase.close();
         return false;
     }
 }
