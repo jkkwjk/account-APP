@@ -34,9 +34,9 @@
     <EditText
         android:id="@+id/editText_register_name"
         android:layout_width="213dp"
-        android:layout_height="25dp"
+        android:layout_height="40dp"
         android:layout_marginStart="10dp"
-        android:layout_marginTop="60dp"
+        android:layout_marginTop="56dp"
         android:hint="Write here"
         android:maxLines="2"
         app:layout_constraintStart_toEndOf="@+id/textView4"
@@ -47,7 +47,7 @@
         android:layout_width="80dp"
         android:layout_height="26dp"
         android:layout_marginStart="50dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="40dp"
         android:text="密    码:"
         android:textSize="24sp"
         app:layout_constraintStart_toStartOf="parent"
@@ -56,16 +56,16 @@
     <EditText
         android:id="@+id/editText_register_password"
         android:layout_width="213dp"
-        android:layout_height="25dp"
+        android:layout_height="40dp"
         android:layout_marginStart="10dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginTop="24dp"
         android:hint="Write here"
         android:maxLines="2"
         app:layout_constraintStart_toEndOf="@+id/textView5"
         app:layout_constraintTop_toBottomOf="@+id/editText_register_name" />
 
     <Button
-        android:id="@+id/button_register"
+        android:id="@+id/button_register_success"
         android:layout_width="77dp"
         android:layout_height="37dp"
         android:layout_marginStart="88dp"
@@ -75,13 +75,13 @@
         app:layout_constraintTop_toBottomOf="@+id/textView5" />
 
     <Button
-        android:id="@+id/button2"
+        android:id="@+id/button_register_back"
         android:layout_width="77dp"
         android:layout_height="37dp"
         android:layout_marginStart="50dp"
-        android:layout_marginTop="50dp"
+        android:layout_marginTop="40dp"
         android:text="返回"
-        app:layout_constraintStart_toEndOf="@+id/button_register"
+        app:layout_constraintStart_toEndOf="@+id/button_register_success"
         app:layout_constraintTop_toBottomOf="@+id/editText_register_password" />
 
 </android.support.constraint.ConstraintLayout>
