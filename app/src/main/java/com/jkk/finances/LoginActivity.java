@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.jkk.finances.Activity.MainActivity;
+import com.jkk.finances.Activity.RegisterActivity;
 import com.jkk.finances.Model.User;
 import com.jkk.finances.Tools.DBHelper;
 import com.jkk.finances.Utils.ToastShow;
@@ -76,9 +77,9 @@ public class LoginActivity extends AppCompatActivity {
                     break;
                 case R.id.button_register:
                     Intent intent = new Intent();
-                    //intent.setClass(context,Re)
+                    intent.setClass(context, RegisterActivity.class);
+                    startActivity(intent);
                     break;
-
             }
         }
     }

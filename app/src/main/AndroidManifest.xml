@@ -13,7 +13,8 @@
         <activity
             android:name=".Activity.MainActivity"
             android:label="@string/title_activity_main" />
-        <activity android:name=".LoginActivity">
+        <activity android:name=".LoginActivity"
+            android:label="请登录">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
