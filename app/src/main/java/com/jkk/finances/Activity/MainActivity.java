@@ -30,7 +30,7 @@ public class MainActivity extends AppCompatActivity {
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
                 case R.id.navigation_home:
-                    fm.beginTransaction().add(R.id.fragment_container,new AccountAllFragment()).commit();
+                    fm.beginTransaction().add(R.id.view_main_fragment_container,new AccountAllFragment()).commit();
                     return true;
                 case R.id.navigation_dashboard:
                     mTextMessage.setText("新增账单");
@@ -50,8 +50,11 @@ public class MainActivity extends AppCompatActivity {
 
         this.context = this;
         fm = getSupportFragmentManager();
+
         BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+
+        //navigation.
     }
 
 

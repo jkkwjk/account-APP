@@ -5,42 +5,45 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
     <LinearLayout
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:layout_marginTop="5dp">
         <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:text="录入时间:    "
             android:textSize="18sp"/>
         <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
             android:text="2019-6-8 13:48:19"
             android:textSize="18sp"
             android:id="@+id/textView_account_add_time"/>
     </LinearLayout>
-    <LinearLayout
-        android:layout_width="wrap_content"
-        android:layout_height="match_parent"
-        android:paddingLeft="20dp"
-        android:orientation="horizontal">
+    <RelativeLayout
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal">
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
             android:text="支付宝"
             android:id="@+id/textView_account_type"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="180元"
-            android:layout_marginLeft="70dp"
-            android:id="@+id/textView_account_money"/>
+            android:layout_marginLeft="110dp"
+            android:id="@+id/textView_account_money"
+            android:layout_gravity="center"/>
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="买吃的"
-            android:layout_marginLeft="70dp"
+            android:layout_marginLeft="250dp"
             android:id="@+id/textView_account_used"/>
-    </LinearLayout>
+
+    </RelativeLayout>
 </LinearLayout>

@@ -1,7 +1,12 @@
 package com.jkk.finances.Model;
 
+import com.jkk.finances.Utils.StampDate;
+
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 public class AccountInfo implements Serializable {
 
@@ -10,14 +15,22 @@ public class AccountInfo implements Serializable {
     private String useName;
     private BigDecimal money; //精确到3位 显示2位
     private String time;
-    private Integer type;
+    private String type;
     private int more;
     private String urlOrstr;
 
+    public static List<AccountInfo> get(){
+        List<AccountInfo> list = new ArrayList<>();
+        list.add(new AccountInfo("买菜",new BigDecimal("2.1"), String.valueOf(new Date().getTime()/1000),"支付宝"));
+        list.add(new AccountInfo("买阿萨德",new BigDecimal("2.45"), String.valueOf(new Date().getTime()/1000),"支付"));
+        list.add(new AccountInfo("买",new BigDecimal("2.411"), String.valueOf(new Date().getTime()/1000),"支宝"));
+        list.add(new AccountInfo("阿萨德啊",new BigDecimal("3"), String.valueOf(new Date().getTime()/1000),"付宝"));
+        return list;
+    }
     public AccountInfo() {
     }
 
-    public AccountInfo(String useName, BigDecimal money, String time, Integer type, int more, String urlOrstr) {
+    public AccountInfo(String useName, BigDecimal money, String time, String type, int more, String urlOrstr) {
         this.useName = useName;
         this.money = money;
         this.time = time;
@@ -26,7 +39,7 @@ public class AccountInfo implements Serializable {
         this.urlOrstr = urlOrstr;
     }
 
-    public AccountInfo(String useName, BigDecimal money, String time, Integer type) {
+    public AccountInfo(String useName, BigDecimal money, String time, String type) {
         this.useName = useName;
         this.money = money;
         this.time = time;
@@ -57,11 +70,11 @@ public class AccountInfo implements Serializable {
         this.time = time;
     }
 
-    public Integer getType() {
+    public String getType() {
         return type;
     }
 
-    public void setType(Integer type) {
+    public void setType(String type) {
         this.type = type;
     }
 
