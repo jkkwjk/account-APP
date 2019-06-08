@@ -67,7 +67,6 @@ public class LoginActivity extends AppCompatActivity {
                             cursor.close();
                             successLogin(new User(userName));
                         }else {
-                            successLogin(new User("1")); //test
                             cursor.close();
                             ToastShow.show(context,"账号或密码错误");
                         }
