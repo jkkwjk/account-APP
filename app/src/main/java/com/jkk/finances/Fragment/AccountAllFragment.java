@@ -15,11 +15,13 @@ import com.jkk.finances.Model.AccountInfo;
 import com.jkk.finances.R;
 import com.jkk.finances.Utils.StampDate;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class AccountAllFragment extends Fragment {
     private RecyclerView mRecyclerView;
     private AccountAdapter accountAdapter;
+    private ArrayList<AccountInfo> list;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -32,7 +34,10 @@ public class AccountAllFragment extends Fragment {
     }
 
     private void updateUI(){
-        List<AccountInfo> list = AccountInfo.get();
+        Bundle bundle = this.getArguments();
+        if (bundle != null){
+            list = (ArrayList<AccountInfo>)bundle.getSerializable("account");
+        }
         accountAdapter = new AccountAdapter(list);
         mRecyclerView.setAdapter(accountAdapter);
     }

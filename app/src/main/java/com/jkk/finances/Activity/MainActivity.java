@@ -4,42 +4,57 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.support.design.widget.BottomNavigationView;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.widget.TextView;
 
 import com.jkk.finances.Fragment.AccountAllFragment;
-import com.jkk.finances.Model.User;
+import com.jkk.finances.Model.AccountInfo;
 import com.jkk.finances.R;
 import com.jkk.finances.Utils.ToastShow;
+
+import java.math.BigDecimal;
+import java.util.ArrayList;
+import java.util.Date;
+import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
     private Context context;
 
     private Long exitTime = 0L;
-    private TextView mTextMessage;
 
     private FragmentManager fm;
+    private TextView mTextMessage;
+    private BottomNavigationView navigation;
+
+    private ArrayList<AccountInfo> accountInfos = AccountInfo.get();
+
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
 
         @Override
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
             switch (item.getItemId()) {
-                case R.id.navigation_home:
-                    fm.beginTransaction().add(R.id.view_main_fragment_container,new AccountAllFragment()).commit();
+                case R.id.navigation_all_account:
+                {
+                    Fragment f = new AccountAllFragment();
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("account",accountInfos);
+                    f.setArguments(bundle);
+                    fm.beginTransaction().replace(R.id.view_main_fragment_container,f).commitAllowingStateLoss();
+                }
                     return true;
-                case R.id.navigation_dashboard:
+                case R.id.navigation_add_account:
                     Intent intent = new Intent(MainActivity.this, AccountManageActivity.class);
-                    startActivityForResult(intent,2);
+                    startActivityForResult(intent,0);
                     return true;
-                case R.id.navigation_notifications:
-                    mTextMessage.setText("统计");
+                case R.id.navigation_count_account:
+                    accountInfos.add(new AccountInfo("new",new BigDecimal("3"), String.valueOf(new Date().getTime()/1000),"付宝"));
                     return true;
             }
             return false;
@@ -52,14 +67,41 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         this.context = this;
-        fm = getSupportFragmentManager();
 
-        BottomNavigationView navigation = (BottomNavigationView) findViewById(R.id.navigation);
-        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+        viewInit();
+        setListener();
 
-        //navigation.
+        navigation.findViewById(R.id.navigation_all_account).performClick();
     }
 
+    private void viewInit(){
+        fm = getSupportFragmentManager();
+        navigation = (BottomNavigationView) findViewById(R.id.navigation);
+    }
+    private void setListener(){
+        navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        switch (requestCode){
+            case 0:
+            {
+                if (resultCode==RESULT_OK){
+                    // TODO: 2019/6/8 加入数据 
+                }
+            }
+                break;
+            case 1:
+            {
+
+            }
+                break;
+        }
+
+        navigation.findViewById(R.id.navigation_all_account).performClick();
+        super.onActivityResult(requestCode, resultCode, data);
+    }
 
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {

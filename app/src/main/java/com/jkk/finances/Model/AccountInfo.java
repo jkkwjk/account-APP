@@ -58,8 +58,8 @@ public class AccountInfo implements Serializable {
         this.str = str;
         this.url = url;
     }
-    public static List<AccountInfo> get(){
-        List<AccountInfo> list = new ArrayList<>();
+    public static ArrayList<AccountInfo> get(){
+        ArrayList<AccountInfo> list = new ArrayList<>();
         list.add(new AccountInfo("买菜",new BigDecimal("2.1"), String.valueOf(new Date().getTime()/1000),"支付宝"));
         list.add(new AccountInfo("买阿萨德",new BigDecimal("2.45"), String.valueOf(new Date().getTime()/1000),"支付"));
         list.add(new AccountInfo("买",new BigDecimal("2.411"), String.valueOf(new Date().getTime()/1000),"支宝"));
