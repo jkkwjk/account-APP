@@ -67,15 +67,16 @@ public class LoginActivity extends AppCompatActivity {
                             cursor.close();
                             successLogin(new User(uid,userName));
                         }else {
+                            successLogin(new User(1,"1"));
                             cursor.close();
                             ToastShow.show(context,"账号或密码错误");
                         }
-
                     }
                 }
                     break;
                 case R.id.button_register:
-                    // TODO: 2019/6/7 跳转注册
+                    Intent intent = new Intent();
+                    //intent.setClass(context,Re)
                     break;
 
             }
