@@ -34,53 +34,16 @@ public class AccountManageActivity extends AppCompatActivity {
         setContentView(R.layout.activity_account_manage);
 
         mEditViewWithPic = (EditViewWithPic) findViewById(R.id.edit_account_image);
-        mEditViewWithPic.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-//                Editable editable = mEditViewWithPic.getText();
-//
-//                if(editable.length() <6){
-//                    return ;
-//                }
-//
-//                int end = Math.max(0,mEditViewWithPic.getSelectionStart() - 1);
-//                int start=end-6;
-//                if(start>=0){
-//                    if(editable.subSequence(start,end).toString().equals("////cn")){
-//                        //editable.delete(start,end);
-//                    }else {
-//                        return;
-//                    }
-//                 }else{
-//                    return;
-//                }
-
-            }
-        });
         buttoninster=(Button)findViewById(R.id.button_account_image);
         buttoninster.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent();
-                /* 开启Pictures画面Type设定为image */
                 intent.setType("image/*");
-                /* 使用Intent.ACTION_GET_CONTENT这个Action */
                 intent.setAction(Intent.ACTION_GET_CONTENT);
-                /* 取得相片后返回本画面 */
                 startActivityForResult(intent, 1);
-//                e.insertDrawable(R.drawable.checkbox_select);
             }
         });
-
 
     }
     @Override
@@ -91,7 +54,7 @@ public class AccountManageActivity extends AppCompatActivity {
             ContentResolver cr = this.getContentResolver();
             try {
                 Bitmap bitmap = BitmapFactory.decodeStream(cr.openInputStream(uri));
-            //    resizeBitmap(bitmap);
+                resizeBitmap(bitmap);
                 mEditViewWithPic.insertDrawable(bitmap);
             } catch (FileNotFoundException e) {
                 Log.e("Exception", e.getMessage(),e);

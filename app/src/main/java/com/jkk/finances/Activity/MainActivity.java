@@ -15,6 +15,7 @@ import android.widget.TextView;
 
 import com.jkk.finances.Fragment.AccountAllFragment;
 import com.jkk.finances.Fragment.AccountCountFragment;
+import com.jkk.finances.Fragment.AccountNull;
 import com.jkk.finances.Model.AccountInfo;
 import com.jkk.finances.R;
 import com.jkk.finances.Utils.ToastShow;
@@ -56,7 +57,12 @@ public class MainActivity extends AppCompatActivity {
                     return true;
                 case R.id.navigation_count_account:
                 {
-                    Fragment f = new AccountCountFragment();
+                    Fragment f;
+                    if (accountInfos==null || accountInfos.size()==0){
+                        f = new AccountNull();
+                    }else {
+                        f = new AccountCountFragment();
+                    }
                     Bundle bundle = new Bundle();
                     bundle.putSerializable("account",accountInfos);
                     f.setArguments(bundle);
