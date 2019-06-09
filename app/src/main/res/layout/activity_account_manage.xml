@@ -109,7 +109,7 @@
         app:layout_constraintStart_toEndOf="@+id/textView10"
         app:layout_constraintTop_toBottomOf="@+id/RG_account_getout" />
 
-    <EditText
+    <com.jkk.finances.EditViewWithPic
         android:id="@+id/edit_account_descripe"
         android:layout_width="411dp"
         android:layout_height="200dp"

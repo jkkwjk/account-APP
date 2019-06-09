@@ -1,4 +1,4 @@
-package com.jkk.finances.Activity;
+package com.jkk.finances;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -10,21 +10,17 @@ import android.util.AttributeSet;
 import android.widget.EditText;
 import android.widget.TextView;
 
-public class Edit extends EditText {
-    public Edit(Context context) {
+public class EditViewWithPic extends android.support.v7.widget.AppCompatEditText {
+    public EditViewWithPic(Context context) {
         super(context);
     }
 
-    public Edit(Context context, AttributeSet attrs) {
+    public EditViewWithPic(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
-    public Edit(Context context, AttributeSet attrs, int defStyleAttr) {
+    public EditViewWithPic(Context context, AttributeSet attrs, int defStyleAttr) {
         super(context, attrs, defStyleAttr);
-    }
-
-    public Edit(Context context, AttributeSet attrs, int defStyleAttr, int defStyleRes) {
-        super(context, attrs, defStyleAttr, defStyleRes);
     }
     public void insertDrawable(int id) {
         final SpannableString ss = new SpannableString("easy");
