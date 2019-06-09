@@ -22,14 +22,14 @@ public class DBHelper extends SQLiteOpenHelper {
     }
 
     public DBHelper(Context context){
-        super(context, "finances.db", null, 4);
+        super(context, "finances.db", null, 5);
     }
 
 
     @Override
     public void onCreate(SQLiteDatabase db) {
         db.execSQL("create table user(password ,username)");
-        db.execSQL("create table accont(username ,time,type,use,url,str)");
+        db.execSQL("create table accont(uuid, username ,time,type,use,url,str)");
     }
 
     @Override
@@ -41,6 +41,8 @@ public class DBHelper extends SQLiteOpenHelper {
 
             }else if (oldVersion == 3){
                 db.execSQL("create table accont(username ,time,type,use,url,str)");
+            }else if (oldVersion == 4){
+                db.execSQL("alter table accont add column uuid");
             }
             onUpgrade(db,oldVersion+1,newVersion);
         }

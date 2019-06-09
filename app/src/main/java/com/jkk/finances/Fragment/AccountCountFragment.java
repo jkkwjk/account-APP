@@ -5,9 +5,13 @@ import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Spinner;
 
 import com.jkk.finances.Model.AccountInfo;
 import com.jkk.finances.R;
@@ -29,16 +33,24 @@ import lecho.lib.hellocharts.view.PieChartView;
 public class AccountCountFragment extends Fragment {
     private PieChartView pieChartView_in;
     private PieChartView pieChartView_out;
+    private Spinner spinner_units;
+    private Spinner spinner_value;
+
+    private ArrayAdapter adapterDay;
+    private ArrayAdapter adapterMonth;
+    private ArrayAdapter adapterYear;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_account_count,container,false);
         pieChartView_in = view.findViewById(R.id.piechart_in);
         pieChartView_out = view.findViewById(R.id.piechart_out);
-
+        spinner_units = view.findViewById(R.id.spinner_unit);
+        spinner_value = view.findViewById(R.id.spinner_value);
 
         initView();
         initData();
+        initListener();
         return view;
     }
 
@@ -51,9 +63,15 @@ public class AccountCountFragment extends Fragment {
         pieChartView_out.setChartRotationEnabled(false);
         pieChartView_out.setCircleFillRatio(0.8F);
 
-
+        List<String> day = new ArrayList<>(); for (int i = 1;i<=Calendar.getInstance().get(Calendar.DAY_OF_MONTH);++i){ day.add(String.valueOf(i)); }
+        List<String> month = new ArrayList<>();for (int i = 1;i<=Calendar.getInstance().get(Calendar.MONTH)+1;++i){ month.add(String.valueOf(i)); }
+        List<String> year = new ArrayList<>();for (int i = 2014;i<=Calendar.getInstance().get(Calendar.YEAR);++i){ year.add(String.valueOf(i)); }
+        adapterYear = new ArrayAdapter (getActivity(),android.R.layout.simple_spinner_item,year);
+        adapterMonth = new ArrayAdapter (getActivity(),android.R.layout.simple_spinner_item,month);
+        adapterDay = new ArrayAdapter (getActivity(),android.R.layout.simple_spinner_item,day);
+        adapterMonth.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        adapterYear.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
     }
-
     private void initData(){
         Bundle bundle = getArguments();
         List<AccountInfo> accountInfos = (ArrayList<AccountInfo>)bundle.getSerializable("account");
@@ -79,10 +97,45 @@ public class AccountCountFragment extends Fragment {
         pieChartView_in.setPieChartData(data);
     }
 
+    private void initListener(){
+        spinner_units.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                switch (position){
+                    case 0:
+                        spinner_value.setAdapter(adapterMonth);
+                        break;
+                    case 1:
+                        spinner_value.setAdapter(adapterYear);
+                        break;
+                    case 2:
+                        spinner_value.setAdapter(adapterDay);
+                        break;
+                    default:break;
+                }
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+        spinner_value.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                Log.d("12231123",String.valueOf(position));
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+    }
 
     private Map<String,List<SliceValue>> getDataByDay(List<AccountInfo> accountInfos,int day){
         Calendar cal = Calendar.getInstance();
-        cal.set(cal.get(Calendar.YEAR),cal.get(Calendar.MONTH),day-1);
+        cal.set(cal.get(Calendar.YEAR),cal.get(Calendar.MONTH),day);
         String before = String.valueOf(cal.getTimeInMillis()/1000);
         cal.add(Calendar.DAY_OF_MONTH,1);
         String after = String.valueOf(cal.getTimeInMillis()/1000);
@@ -92,7 +145,7 @@ public class AccountCountFragment extends Fragment {
 
     private Map<String,List<SliceValue>> getDataByMonth(List<AccountInfo> accountInfos,int month){
         Calendar cal = Calendar.getInstance();
-        cal.set(cal.get(Calendar.YEAR),month-1,0);
+        cal.set(cal.get(Calendar.YEAR),month,0);
         String before = String.valueOf(cal.getTimeInMillis()/1000);
         cal.add(Calendar.MONTH,1);
         String after = String.valueOf(cal.getTimeInMillis()/1000);

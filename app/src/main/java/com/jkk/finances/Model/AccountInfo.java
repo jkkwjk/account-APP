@@ -1,16 +1,27 @@
 package com.jkk.finances.Model;
 
 import com.jkk.finances.Utils.StampDate;
+import com.jkk.finances.Utils.UUIDutil;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
+import java.util.UUID;
 
 public class AccountInfo implements Serializable {
 
     private static final long serialVersionUID = 3591022581529556534L;
+
+    private String uuid;
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
+    }
 
     private String useName;
     private Float money;
@@ -37,6 +48,7 @@ public class AccountInfo implements Serializable {
     }
 
     public AccountInfo(String useName, Float money, String time, String type, int more, String str) {
+        this.uuid = UUIDutil.getUUID();
         this.useName = useName;
         this.money = money;
         this.time = time;
@@ -50,6 +62,7 @@ public class AccountInfo implements Serializable {
     }
 
     public AccountInfo(String useName, Float money, String time, String type, int more, String str, String url) {
+        this.uuid = UUIDutil.getUUID();
         this.useName = useName;
         this.money = money;
         this.time = time;
@@ -70,9 +83,10 @@ public class AccountInfo implements Serializable {
         list.add(new AccountInfo("阿萨德啊",-308.6F, String.valueOf(new Date().getTime()/1000),"支付宝"));
         return list;
     }
-    public AccountInfo() { }
+    public AccountInfo() { this.uuid = UUIDutil.getUUID(); }
 
     public AccountInfo(String useName, Float money, String time, String type) {
+        this.uuid = UUIDutil.getUUID();
         this.useName = useName;
         this.money = money;
         this.time = time;
