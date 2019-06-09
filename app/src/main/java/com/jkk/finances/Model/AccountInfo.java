@@ -27,7 +27,7 @@ public class AccountInfo implements Serializable {
     private Float money;
     private String time;
     private String type;
-    private int more;
+    private Integer more;
     private String str;
     private String url;
 
@@ -47,7 +47,7 @@ public class AccountInfo implements Serializable {
         this.url = url;
     }
 
-    public AccountInfo(String useName, Float money, String time, String type, int more, String str) {
+    public AccountInfo(String useName, Float money, String time, String type, Integer more, String str) {
         this.uuid = UUIDutil.getUUID();
         this.useName = useName;
         this.money = money;
@@ -61,7 +61,7 @@ public class AccountInfo implements Serializable {
         }
     }
 
-    public AccountInfo(String useName, Float money, String time, String type, int more, String str, String url) {
+    public AccountInfo(String useName, Float money, String time, String type, Integer more, String str, String url) {
         this.uuid = UUIDutil.getUUID();
         this.useName = useName;
         this.money = money;
@@ -125,11 +125,11 @@ public class AccountInfo implements Serializable {
         this.type = type;
     }
 
-    public int getMore() {
+    public Integer getMore() {
         return more;
     }
 
-    public void setMore(int more) {
+    public void setMore(Integer more) {
         this.more = more;
     }
 }

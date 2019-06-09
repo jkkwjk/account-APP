@@ -34,7 +34,6 @@ public class EditViewWithPic extends android.support.v7.widget.AppCompatEditText
         inputConnection = new TInputConnection(null,true);
     }
     public void insertDrawable(Bitmap b) {
-        append("\n");
         char c = 5;
         String s = String.valueOf(c);
         final SpannableString ss = new SpannableString(s);
