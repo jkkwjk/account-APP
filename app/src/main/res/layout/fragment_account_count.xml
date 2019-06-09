@@ -8,7 +8,7 @@
 
     <lecho.lib.hellocharts.view.PieChartView
         android:id="@+id/piechart_in"
-        android:layout_width="250dp"
+        android:layout_width="350dp"
         android:layout_height="250dp"
         android:maxHeight="400dp"
         app:layout_constraintStart_toStartOf="parent"
@@ -16,7 +16,7 @@
 
     <lecho.lib.hellocharts.view.PieChartView
         android:id="@+id/piechart_out"
-        android:layout_width="250dp"
+        android:layout_width="350dp"
         android:layout_height="250dp"
         android:maxHeight="400dp"
         app:layout_constraintStart_toStartOf="parent"

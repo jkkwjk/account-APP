@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.jkk.finances.Model.AccountInfo;
 import com.jkk.finances.R;
 import com.jkk.finances.Utils.ColorUtil;
 
@@ -37,23 +38,34 @@ public class AccountCountFragment extends Fragment {
         return view;
     }
 
-
     private void initView(){
         pieChartView_in.setChartRotation(180,true);
         pieChartView_in.setChartRotationEnabled(false);
-        pieChartView_in.setCircleFillRatio(0.9F);
+        pieChartView_in.setCircleFillRatio(0.8F);
 
         pieChartView_out.setChartRotation(180,true);
         pieChartView_out.setChartRotationEnabled(false);
-        pieChartView_out.setCircleFillRatio(0.9F);
+        pieChartView_out.setCircleFillRatio(0.8F);
     }
 
     private void initData(){
+        Bundle bundle = getArguments();
+        List<AccountInfo> accountInfos = (ArrayList<AccountInfo>)bundle.getSerializable("account");
+        List<String> typeList = new ArrayList<>();
+        List<SliceValue> values = new ArrayList<>();
+        if (accountInfos!=null){
+            for (AccountInfo accountInfo : accountInfos) {
+                accountInfo.getType();
+            }
+        }else {
+
+        }
         int numValues = 6;
         //初始化数据
-        List<SliceValue> values = new ArrayList<>();
+
         for (int i = 0; i < numValues; ++i) {
             SliceValue sliceValue = new SliceValue((float) Math.random() * 30 + 15, ColorUtil.nextColor());
+            sliceValue.setLabel("支付宝20%");
             values.add(sliceValue);
         }
 
@@ -65,6 +77,5 @@ public class AccountCountFragment extends Fragment {
         data.setCenterText1("支出");
         data.setCenterText1FontSize(20);
         pieChartView_in.setPieChartData(data);
-        pieChartView_out.setPieChartData(data);
     }
 }

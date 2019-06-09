@@ -24,6 +24,8 @@ public class AccountManageActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_account_manage);
+
+        mEditViewWithPic = (EditViewWithPic) findViewById(R.id.edit_account_descripe);
         buttoninster=(Button)findViewById(R.id.button_account_image);
         buttoninster.setOnClickListener(new View.OnClickListener() {
             @Override
