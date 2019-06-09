@@ -1,6 +1,7 @@
 package com.jkk.finances.Activity;
 
 import android.content.ContentResolver;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -9,11 +10,13 @@ import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 
 import com.jkk.finances.EditViewWithPic;
 import com.jkk.finances.R;
+import com.jkk.finances.Utils.ToastShow;
 
 import java.io.FileNotFoundException;
 
@@ -40,6 +43,22 @@ public class AccountManageActivity extends AppCompatActivity {
 //                e.insertDrawable(R.drawable.checkbox_select);
             }
         });
+        mEditViewWithPic.setOnKeyListener(new View.OnKeyListener() {
+
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                Log.d("back",String.valueOf(keyCode));
+//                if (event.getAction()==KeyEvent.ACTION_UP) {
+//                    Log.d("back","hello");
+//                    //dosomething
+//                    //有需要时可以添加以下代码来隐藏软键盘
+//                   // InputMethodManager imm = (InputMethodManager) getSystemService(SearchActivity.INPUT_METHOD_SERVICE);
+//                   // imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
+//                }
+                return false;
+            }
+
+        });
 
     }
     @Override
@@ -50,11 +69,24 @@ public class AccountManageActivity extends AppCompatActivity {
             ContentResolver cr = this.getContentResolver();
             try {
                 Bitmap bitmap = BitmapFactory.decodeStream(cr.openInputStream(uri));
+            //    resizeBitmap(bitmap);
                 mEditViewWithPic.insertDrawable(bitmap);
             } catch (FileNotFoundException e) {
                 Log.e("Exception", e.getMessage(),e);
             }
         }
         super.onActivityResult(requestCode, resultCode, data);
+    }
+    private  Bitmap resizeBitmap(Bitmap bitmap){
+        double editWid = mEditViewWithPic.getWidth();
+        double bitWid = bitmap.getWidth();
+        if (editWid>bitWid){
+            return bitmap;
+        }else {
+            double rate = editWid*0.75/bitWid;
+            bitmap.setHeight((int)(bitmap.getHeight()*rate));
+            bitmap.setWidth((int)(bitmap.getWidth()*rate));
+        }
+        return  bitmap;
     }
 }
