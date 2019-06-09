@@ -71,6 +71,7 @@ public class AccountCountFragment extends Fragment {
         adapterDay = new ArrayAdapter (getActivity(),android.R.layout.simple_spinner_item,day);
         adapterMonth.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         adapterYear.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+
     }
     private void initData(){
         Bundle bundle = getArguments();

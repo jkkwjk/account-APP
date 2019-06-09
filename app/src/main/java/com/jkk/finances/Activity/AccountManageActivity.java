@@ -118,7 +118,7 @@ public class AccountManageActivity extends AppCompatActivity {
                     RadioGroup radioGroup2 =(RadioGroup) findViewById(R.id.RG_account_getout);
                     String getout =((RadioButton)findViewById(radioGroup2.getCheckedRadioButtonId())).getText().toString();
                     String time=edittime.getText().toString();
-                    String
+                    //String
                     if (mAccountInfo == null){
                         mAccountInfo=new AccountInfo();
                     }
