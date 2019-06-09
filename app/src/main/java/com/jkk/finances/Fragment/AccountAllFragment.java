@@ -58,7 +58,7 @@ public class AccountAllFragment extends Fragment {
         public void bind(AccountInfo accountInfo){
             textView_textView_account_used.setText(accountInfo.getUseName());
             textView_textView_account_type.setText(accountInfo.getType());
-            textView_textView_account_money.setText(accountInfo.getMoney().toPlainString());
+            textView_textView_account_money.setText(String.valueOf(accountInfo.getMoney()));
             textView_textView_account_add_time.setText(StampDate.stampToDate(accountInfo.getTime()));
         }
         @Override

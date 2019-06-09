@@ -14,6 +14,7 @@ import android.view.MenuItem;
 import android.widget.TextView;
 
 import com.jkk.finances.Fragment.AccountAllFragment;
+import com.jkk.finances.Fragment.AccountCountFragment;
 import com.jkk.finances.Model.AccountInfo;
 import com.jkk.finances.R;
 import com.jkk.finances.Utils.ToastShow;
@@ -54,7 +55,13 @@ public class MainActivity extends AppCompatActivity {
                     startActivityForResult(intent,0);
                     return true;
                 case R.id.navigation_count_account:
-                    accountInfos.add(new AccountInfo("new",new BigDecimal("3"), String.valueOf(new Date().getTime()/1000),"付宝"));
+                {
+                    Fragment f = new AccountCountFragment();
+                    Bundle bundle = new Bundle();
+                    bundle.putSerializable("account",accountInfos);
+                    f.setArguments(bundle);
+                    fm.beginTransaction().replace(R.id.view_main_fragment_container,f).commitAllowingStateLoss();
+                }
                     return true;
             }
             return false;

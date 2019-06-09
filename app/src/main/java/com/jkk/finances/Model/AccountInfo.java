@@ -13,7 +13,7 @@ public class AccountInfo implements Serializable {
     private static final long serialVersionUID = 3591022581529556534L;
 
     private String useName;
-    private BigDecimal money; //精确到3位 显示2位
+    private Float money;
     private String time;
     private String type;
     private int more;
@@ -36,7 +36,7 @@ public class AccountInfo implements Serializable {
         this.url = url;
     }
 
-    public AccountInfo(String useName, BigDecimal money, String time, String type, int more, String str) {
+    public AccountInfo(String useName, Float money, String time, String type, int more, String str) {
         this.useName = useName;
         this.money = money;
         this.time = time;
@@ -49,7 +49,7 @@ public class AccountInfo implements Serializable {
         }
     }
 
-    public AccountInfo(String useName, BigDecimal money, String time, String type, int more, String str, String url) {
+    public AccountInfo(String useName, Float money, String time, String type, int more, String str, String url) {
         this.useName = useName;
         this.money = money;
         this.time = time;
@@ -60,15 +60,15 @@ public class AccountInfo implements Serializable {
     }
     public static ArrayList<AccountInfo> get(){
         ArrayList<AccountInfo> list = new ArrayList<>();
-        list.add(new AccountInfo("买菜",new BigDecimal("2.1"), String.valueOf(new Date().getTime()/1000),"支付宝"));
-        list.add(new AccountInfo("买阿萨德",new BigDecimal("2.45"), String.valueOf(new Date().getTime()/1000),"支付"));
-        list.add(new AccountInfo("买",new BigDecimal("2.411"), String.valueOf(new Date().getTime()/1000),"支宝"));
-        list.add(new AccountInfo("阿萨德啊",new BigDecimal("3"), String.valueOf(new Date().getTime()/1000),"付宝"));
+        list.add(new AccountInfo("买菜",2.1F, String.valueOf(new Date().getTime()/1000),"支付宝"));
+        list.add(new AccountInfo("买阿萨德",2.45F, String.valueOf(new Date().getTime()/1000),"支付"));
+        list.add(new AccountInfo("买",2.411F, String.valueOf(new Date().getTime()/1000),"支宝"));
+        list.add(new AccountInfo("阿萨德啊",3F, String.valueOf(new Date().getTime()/1000),"付宝"));
         return list;
     }
     public AccountInfo() { }
 
-    public AccountInfo(String useName, BigDecimal money, String time, String type) {
+    public AccountInfo(String useName, Float money, String time, String type) {
         this.useName = useName;
         this.money = money;
         this.time = time;
@@ -83,11 +83,11 @@ public class AccountInfo implements Serializable {
         this.useName = useName;
     }
 
-    public BigDecimal getMoney() {
+    public Float getMoney() {
         return money;
     }
 
-    public void setMoney(BigDecimal money) {
+    public void setMoney(Float money) {
         this.money = money;
     }
 
