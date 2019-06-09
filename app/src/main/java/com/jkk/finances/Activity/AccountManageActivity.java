@@ -9,26 +9,63 @@ import android.net.Uri;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.Toast;
 
 import com.jkk.finances.EditViewWithPic;
 import com.jkk.finances.R;
+import com.jkk.finances.TInputConnection;
 import com.jkk.finances.Utils.ToastShow;
 
 import java.io.FileNotFoundException;
 
 public class AccountManageActivity extends AppCompatActivity {
     private Button buttoninster;
-    EditViewWithPic mEditViewWithPic;
+    private  EditViewWithPic mEditViewWithPic;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_account_manage);
 
-        mEditViewWithPic = (EditViewWithPic) findViewById(R.id.edit_account_descripe);
+        mEditViewWithPic = (EditViewWithPic) findViewById(R.id.edit_account_image);
+        mEditViewWithPic.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+//                Editable editable = mEditViewWithPic.getText();
+//
+//                if(editable.length() <6){
+//                    return ;
+//                }
+//
+//                int end = Math.max(0,mEditViewWithPic.getSelectionStart() - 1);
+//                int start=end-6;
+//                if(start>=0){
+//                    if(editable.subSequence(start,end).toString().equals("////cn")){
+//                        //editable.delete(start,end);
+//                    }else {
+//                        return;
+//                    }
+//                 }else{
+//                    return;
+//                }
+
+            }
+        });
         buttoninster=(Button)findViewById(R.id.button_account_image);
         buttoninster.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -43,22 +80,7 @@ public class AccountManageActivity extends AppCompatActivity {
 //                e.insertDrawable(R.drawable.checkbox_select);
             }
         });
-        mEditViewWithPic.setOnKeyListener(new View.OnKeyListener() {
 
-            @Override
-            public boolean onKey(View v, int keyCode, KeyEvent event) {
-                Log.d("back",String.valueOf(keyCode));
-//                if (event.getAction()==KeyEvent.ACTION_UP) {
-//                    Log.d("back","hello");
-//                    //dosomething
-//                    //有需要时可以添加以下代码来隐藏软键盘
-//                   // InputMethodManager imm = (InputMethodManager) getSystemService(SearchActivity.INPUT_METHOD_SERVICE);
-//                   // imm.hideSoftInputFromWindow(v.getWindowToken(), 0);
-//                }
-                return false;
-            }
-
-        });
 
     }
     @Override
