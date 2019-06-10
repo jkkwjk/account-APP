@@ -3,6 +3,7 @@ package com.jkk.finances.Activity;
 import android.content.ContentResolver;
 import android.content.ContentUris;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.database.Cursor;
 import android.graphics.Bitmap;
@@ -12,6 +13,7 @@ import android.os.Build;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v4.content.FileProvider;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
@@ -21,6 +23,7 @@ import android.view.Gravity;
 import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -31,34 +34,38 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.jkk.finances.EditViewWithPic;
 import com.jkk.finances.Model.AccountInfo;
+import com.jkk.finances.Model.MyDate;
 import com.jkk.finances.Model.User;
 import com.jkk.finances.R;
 import com.jkk.finances.TInputConnection;
+import com.jkk.finances.Utils.StampDate;
 import com.jkk.finances.Utils.ToastShow;
 
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
-public class AccountManageActivity extends AppCompatActivity {
+public class AccountManageActivity extends AppCompatActivity implements DatePicker.OnDateChangedListener {
     private TextView mTextView;
     private Context context;
     private Button buttoninster;
     private EditViewWithPic mEditViewWithPic;
     private EditText editname;
     private EditText editmoney;
-    private EditText edittime;
+    private Button edittime;
     private Button buttonback;
     private Button buttonsubmit;
     private AccountInfo mAccountInfo;
     private RadioGroup radioGroup1;//type
     private RadioGroup radioGroup2;//getout
     private ArrayList<String> mArrayList = new ArrayList<>();
-
     private String timeStream;
+
+    private MyDate pickDate;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -67,11 +74,41 @@ public class AccountManageActivity extends AppCompatActivity {
         this.context=this;
 
         mTextView=(TextView)findViewById(R.id.textView_account_text);
-        edittime=(EditText)findViewById(R.id.button_account_time);
+        edittime=(Button)findViewById(R.id.button_account_time);
         edittime.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //点击弹出时间选择
+                AlertDialog.Builder builder = new AlertDialog.Builder(context);
+                builder.setPositiveButton("选择", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        int year = pickDate.getYear();
+                        int month = pickDate.getMonth();
+                        int day = pickDate.getDay();
+                        mAccountInfo.setTime(StampDate.dateToStamp(
+                                String.format("%s-%s-%s 08:00:00",year,month,day)
+                        ));
+                        edittime.setText(String.format("%s / %s / %s", pickDate.getYear(),pickDate.getMonth(),pickDate.getDay()));
+                        dialog.dismiss();
+                    }
+                });
+                builder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        dialog.dismiss();
+                    }
+                });
+                AlertDialog dialog = builder.create();
+                View dialogView = View.inflate(context,R.layout.view_time_picker,null);
+                DatePicker datePicker = dialogView.findViewById(R.id.datepicker);
+
+                dialog.setTitle("选择生日");
+                dialog.setView(dialogView);
+                dialog.show();
+
+                datePicker.init(pickDate.getYear(),pickDate.getMonth()-1,pickDate.getDay(), AccountManageActivity.this);
+                datePicker.setMinDate(0);
+                datePicker.setMaxDate(new Date().getTime());
             }
         });
         Intent intent=getIntent();
@@ -116,8 +153,16 @@ public class AccountManageActivity extends AppCompatActivity {
         buttoninster=(Button)findViewById(R.id.button_account_image);
         radioGroup1 =(RadioGroup) findViewById(R.id.RG_account_type);
         radioGroup2 =(RadioGroup) findViewById(R.id.RG_account_getout);
-        startchange();
-        //editname=(EditText)findViewById(R.id.button_account_time);
+        edittime=findViewById(R.id.button_account_time);
+        if (mAccountInfo == null){
+            mAccountInfo=new AccountInfo();
+        }else {
+            startchange();
+        }
+        SimpleDateFormat sf = new SimpleDateFormat("yyyy-MM-dd");
+        String dateStr = sf.format(new Date());
+        String[] dateSplit = dateStr.split("-");
+        pickDate = new MyDate(Integer.parseInt(dateSplit[0]),Integer.parseInt(dateSplit[1]),Integer.parseInt(dateSplit[2]));
 
         buttoninster.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -128,6 +173,7 @@ public class AccountManageActivity extends AppCompatActivity {
                 startActivityForResult(intent, 1);
             }
         });
+
         buttonback=(Button)findViewById(R.id.button_account_back);
         buttonback.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -150,15 +196,9 @@ public class AccountManageActivity extends AppCompatActivity {
                     if(getout.equals("支出")){
                         money=-money;
                     }
-                    //String time=timeStream;
-                    String time = String.valueOf((new Date()).getTime()/1000);
-                    if (mAccountInfo == null){
-                        mAccountInfo=new AccountInfo();
-                    }
                     mAccountInfo.setMoney(money);
                     mAccountInfo.setUseName(usename);
                     mAccountInfo.setType(type);
-                    mAccountInfo.setTime(time);
                     if(!(editable==null||editable.toString().equals(""))){
                         mAccountInfo.setStr(editable.toString());
                         if(mArrayList.size()==0){
@@ -194,7 +234,8 @@ public class AccountManageActivity extends AppCompatActivity {
                 resizeBitmap(bitmap);
                 mEditViewWithPic.append("\n");
                 mEditViewWithPic.insertDrawable(bitmap);
-                mArrayList.add(uri.getScheme()+"://"+uri.getEncodedAuthority()+uri.getEncodedPath());
+                //mArrayList.add(uri.getScheme()+"://"+uri.getEncodedAuthority()+uri.getEncodedPath());
+                mArrayList.add(uri.toString());
             } catch (FileNotFoundException e) {
                 Log.e("Exception", e.getMessage(),e);
             }
@@ -230,6 +271,10 @@ public class AccountManageActivity extends AppCompatActivity {
     }
     public void startchange(){
         if(mAccountInfo!=null){
+            String birthday = StampDate.stampToDate(mAccountInfo.getTime());
+            String[] birthdayDate = birthday.substring(0,birthday.indexOf(" ")).split("-");
+            pickDate = new MyDate(Integer.parseInt(birthdayDate[0]),Integer.parseInt(birthdayDate[1]),Integer.parseInt(birthdayDate[2]));
+            edittime.setText(String.format("%s / %s / %s", pickDate.getYear(),pickDate.getMonth(),pickDate.getDay()));
             mTextView.setText("在这里，修改你的账单");
             editname.setText(mAccountInfo.getUseName());
             editmoney.setText(mAccountInfo.getMoney().toString());
@@ -253,8 +298,10 @@ public class AccountManageActivity extends AppCompatActivity {
                 radioGroup2.check(R.id.RB_account_6);
             }
             JSONArray jsonArray = (JSONArray) JSON.parse(mAccountInfo.getUrl());
-            for (Object o : jsonArray) {
-                mArrayList.add(o.toString());
+            if (jsonArray!=null){
+                for (Object o : jsonArray) {
+                    mArrayList.add(o.toString());
+                }
             }
             if(mAccountInfo.getMore()!=null){
                 String str=mAccountInfo.getStr();
@@ -263,9 +310,9 @@ public class AccountManageActivity extends AppCompatActivity {
                     if(str.charAt(i)==5){
                         ContentResolver cr = this.getContentResolver();
                         try {
-                            Uri url = Uri.parse(mArrayList.get(number));
+                            Uri uri = Uri.parse(mAccountInfo.getUrl());
                             number=number+1;
-                            Bitmap bitmap = BitmapFactory.decodeStream(cr.openInputStream(url));
+                            Bitmap bitmap = BitmapFactory.decodeStream(cr.openInputStream(uri));
                             resizeBitmap(bitmap);
                             mEditViewWithPic.append("\n");
                             mEditViewWithPic.insertDrawable(bitmap);
@@ -282,17 +329,11 @@ public class AccountManageActivity extends AppCompatActivity {
             mTextView.setText("在这里，添加你的账单");
         }
     }
-    public Uri getUriFromFilePath(Context ctx, File filePath) {
-        Uri requirdUri = null;
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
-            requirdUri = FileProvider.getUriForFile(ctx,
-                    ctx.getApplicationContext().getPackageName() + PROVIDER_FILE_EXTENSION,
-                    filePath);
-        } else {
-            requirdUri = Uri.fromFile(filePath);
-        }
 
-        return requirdUri;
+    @Override
+    public void onDateChanged(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+        pickDate.setYear(year);
+        pickDate.setMonth(monthOfYear+1);
+        pickDate.setDay(dayOfMonth);
     }
-
 }

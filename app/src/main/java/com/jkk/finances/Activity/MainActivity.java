@@ -17,7 +17,9 @@ import com.jkk.finances.Fragment.AccountAllFragment;
 import com.jkk.finances.Fragment.AccountCountFragment;
 import com.jkk.finances.Fragment.AccountNull;
 import com.jkk.finances.Model.AccountInfo;
+import com.jkk.finances.Model.User;
 import com.jkk.finances.R;
+import com.jkk.finances.Serives.AddAccount;
 import com.jkk.finances.Utils.ToastShow;
 
 import java.math.BigDecimal;
@@ -34,8 +36,9 @@ public class MainActivity extends AppCompatActivity {
     private TextView mTextMessage;
     private BottomNavigationView navigation;
 
-    private ArrayList<AccountInfo> accountInfos = AccountInfo.get();
+    private ArrayList<AccountInfo> accountInfos ;
 
+    private String userName;
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
 
@@ -83,7 +86,8 @@ public class MainActivity extends AppCompatActivity {
 
         viewInit();
         setListener();
-
+        userName = ((User)(getIntent().getSerializableExtra("user"))).getUserName();
+        accountInfos = (ArrayList<AccountInfo>) AddAccount.getInfoByUserName(context,userName);
         navigation.findViewById(R.id.navigation_all_account).performClick(); //默认选中首页
     }
 
@@ -104,9 +108,10 @@ public class MainActivity extends AppCompatActivity {
                 {
                     AccountInfo accountInfo = (AccountInfo)data.getSerializableExtra("account");
                     accountInfos.add(accountInfo);
+                    AddAccount.addAccount(context,userName,accountInfo);
                 }
                 break;
-                case 1:
+                default:
                 {
                     AccountInfo accountInfo = ((AccountInfo)data.getSerializableExtra("account"));
                     for (int i=0; i<accountInfos.size(); ++i){

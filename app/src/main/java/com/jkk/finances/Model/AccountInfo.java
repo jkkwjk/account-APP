@@ -12,7 +12,7 @@ import java.util.UUID;
 
 public class AccountInfo implements Serializable {
 
-    private static final long serialVersionUID = 3591022581529556534L;
+ //   private static final long serialVersionUID = 3591022581529556534L;
 
     private String uuid;
     public String getUuid() {

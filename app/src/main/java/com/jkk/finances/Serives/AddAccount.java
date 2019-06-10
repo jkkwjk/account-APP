@@ -36,20 +36,25 @@ public class AddAccount {
         return rowID!=-1;
     }
 
-    private static List<AccountInfo> getInfoByUserName(Context context,String userName){
+    private void update(Context context,String userName, AccountInfo accountInfo){
+        SQLiteDatabase db = new DBHelper(context).getWritableDatabase();
+        db.delete("accont","uuid",new String[]{accountInfo.getUuid()});
+        this.addAccount(context, userName, accountInfo);
+    }
+    public static List<AccountInfo> getInfoByUserName(Context context,String userName){
         List<AccountInfo> ret = new ArrayList<>();
         SQLiteDatabase db = new DBHelper(context).getWritableDatabase();
 
         Cursor cursor = db.rawQuery("select * from accont where username = ?", new String[]{userName});
 
         while (cursor.moveToNext()){
-            String uuid = cursor.getColumnName(cursor.getColumnIndex("uuid"));
-            String time = cursor.getColumnName(cursor.getColumnIndex("time"));
-            String type = cursor.getColumnName(cursor.getColumnIndex("type"));
-            String use = cursor.getColumnName(cursor.getColumnIndex("use"));
-            String url = cursor.getColumnName(cursor.getColumnIndex("url"));
-            String str = cursor.getColumnName(cursor.getColumnIndex("str"));
-            Float money = Float.parseFloat(cursor.getColumnName(cursor.getColumnIndex("money")));
+            String uuid = cursor.getString(cursor.getColumnIndex("uuid"));
+            String time = cursor.getString(cursor.getColumnIndex("time"));
+            String type = cursor.getString(cursor.getColumnIndex("type"));
+            String use = cursor.getString(cursor.getColumnIndex("use"));
+            String url = cursor.getString(cursor.getColumnIndex("url"));
+            String str = cursor.getString(cursor.getColumnIndex("str"));
+            Float money = Float.parseFloat(cursor.getString(cursor.getColumnIndex("money")));
 
             Integer more = null;
 
