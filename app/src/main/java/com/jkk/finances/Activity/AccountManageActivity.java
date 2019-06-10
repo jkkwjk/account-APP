@@ -64,18 +64,21 @@ public class AccountManageActivity extends AppCompatActivity {
         mEditViewWithPic.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                if(after<count){
-                    char ident=s.charAt(start);
-                    int number=0;
-                    if(ident==5){
-                        Log.d("check","被删的是图片");
-                        for(int i=0;i<start;i++){
-                            char ch=s.charAt(i);
-                            if(ch==5){
-                                number=number+1;
-                            }
+                if (after < count){
+                    //删除
+                    char ch = 5;
+                    String str = String.valueOf(s);
+                    str = str.substring(start,start+count);
+                    int num = 0;
+                    for (int i=0;i<start; ++i){
+                        if (s.toString().charAt(i)==ch){
+                            num++;
                         }
-                        Log.d("check","第"+number);
+                    }
+                    for (int i=0; i<str.length(); ++i){
+                        if (str.charAt(i)==ch){
+                            Log.d("jkk33", String.format("删除%s图片", num++));
+                        }
                     }
                 }
             }
