@@ -64,7 +64,25 @@ public class AccountManageActivity extends AppCompatActivity {
         mEditViewWithPic.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
+//                Log.d("start"," ");
+//                Log.d("start","length   "+s.length());
+//                Log.d("start","start   "+start);
+//                Log.d("start","count   "+count);
+//                Log.d("start","after   "+after);
+                if(after<count){
+                    char ident=s.charAt(start);
+                    int number=0;
+                    if(ident==5){
+                        Log.d("check","被删的是图片");
+                        for(int i=0;i<start;i++){
+                            char ch=s.charAt(i);
+                            if(ch==5){
+                                number=number+1;
+                            }
+                        }
+                        Log.d("check","第"+number);
+                    }
+                }
             }
 
             @Override
@@ -74,7 +92,6 @@ public class AccountManageActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-
             }
         });
         editname=(EditText)findViewById(R.id.edit_account_name);
