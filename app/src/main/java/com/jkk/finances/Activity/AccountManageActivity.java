@@ -1,11 +1,14 @@
 package com.jkk.finances.Activity;
 
 import android.content.ContentResolver;
+import android.content.ContentUris;
 import android.content.Context;
 import android.content.Intent;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.provider.MediaStore;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -46,7 +49,11 @@ public class AccountManageActivity extends AppCompatActivity {
     private Button buttonback;
     private Button buttonsubmit;
     private AccountInfo mAccountInfo;
+    private RadioGroup radioGroup1;//type
+    private RadioGroup radioGroup2;//getout
     private ArrayList<String> mArrayList = new ArrayList<>();
+
+    private String timeStream;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -55,9 +62,16 @@ public class AccountManageActivity extends AppCompatActivity {
         this.context=this;
 
         mTextView=(TextView)findViewById(R.id.textView_account_text);
+        edittime=(EditText)findViewById(R.id.button_account_time);
+        edittime.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //点击弹出时间选择
+            }
+        });
         Intent intent=getIntent();
         mAccountInfo = (AccountInfo) intent.getSerializableExtra("account");
-
+        startchange(mAccountInfo);
         mEditViewWithPic = (EditViewWithPic) findViewById(R.id.edit_account_image);
         mEditViewWithPic.addTextChangedListener(new TextWatcher() {
             @Override
@@ -122,14 +136,14 @@ public class AccountManageActivity extends AppCompatActivity {
                 Editable editable=mEditViewWithPic.getText();
                 if(checknumber(number)) {
                     float money=Float.parseFloat(number);
-                    RadioGroup radioGroup1 =(RadioGroup) findViewById(R.id.RG_account_type);
+                    radioGroup1 =(RadioGroup) findViewById(R.id.RG_account_type);
                     String type =((RadioButton)findViewById(radioGroup1.getCheckedRadioButtonId())).getText().toString();
-                    RadioGroup radioGroup2 =(RadioGroup) findViewById(R.id.RG_account_getout);
+                    radioGroup2 =(RadioGroup) findViewById(R.id.RG_account_getout);
                     String getout =((RadioButton)findViewById(radioGroup2.getCheckedRadioButtonId())).getText().toString();
                     if(getout.equals("支出")){
                         money=-money;
                     }
-                    String time=edittime.getText().toString();
+                    String time=timeStream;
                     //String
                     if (mAccountInfo == null){
                         mAccountInfo=new AccountInfo();
@@ -150,6 +164,10 @@ public class AccountManageActivity extends AppCompatActivity {
                             }
                         }
                     }
+                    Intent intent = new Intent();
+                    intent.putExtra("account",mAccountInfo);
+                    setResult(RESULT_OK,intent);
+                    finish();
                 }else{
                     ToastShow.show(context,"请正确填写金额");
                 }
@@ -212,11 +230,67 @@ public class AccountManageActivity extends AppCompatActivity {
             mTextView.setText("在这里，修改你的账单");
             editname.setText(mAccountInfo.getUseName());
             editmoney.setText(mAccountInfo.getMoney().toString());
-            //得到时间并显示
-            //得到url和more值在mEditViewWithPic中显示
+            String type=mAccountInfo.getType();
+            if(type.equals("支付宝")){
+                radioGroup1.check(R.id.RB_account_1);
+            }else{
+                if(type.equals("微信")){
+                    radioGroup1.check(R.id.RB_account_2);
+                }else{
+                    if(type.equals("银行卡")){
+                        radioGroup1.check(R.id.RB_account_3);
+                    }else{
 
+                        radioGroup1.check(R.id.RB_account_4);
+                    }
+                }
+            }
+            if(mAccountInfo.getMoney()<0){
+                radioGroup2.check(R.id.RB_account_5);
+            }else{
+                radioGroup2.check(R.id.RB_account_6);
+            }
+            mArrayList =(ArrayList<String>) JSON.parse(mAccountInfo.getUrl());
+            if(mAccountInfo.getMore()!=null){
+                String str=mAccountInfo.getStr();
+                int number=0;
+                for(int i=0;i<str.length();i++){
+                    if(str.charAt(i)==5){
+                        ContentResolver cr = this.getContentResolver();
+                        try {
+                            Uri url = getMediaUriFromPath(context,mArrayList.get(number));
+                            number=number+1;
+                            Bitmap bitmap = BitmapFactory.decodeStream(cr.openInputStream(url));
+                            resizeBitmap(bitmap);
+                            mEditViewWithPic.append("\n");
+                            mEditViewWithPic.insertDrawable(bitmap);
+                        }catch (FileNotFoundException e){
+                            Log.e("Exception", e.getMessage(),e);
+                        }
+                    }else{
+                        mEditViewWithPic.append(String.valueOf(str.charAt(i)));
+                    }
+                }
+            }
+            //得到时间并显示
         }else{
             mTextView.setText("在这里，添加你的账单");
         }
+    }
+    public static Uri getMediaUriFromPath(Context context, String path) {
+        Uri mediaUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
+        Cursor cursor = context.getContentResolver().query(mediaUri,
+                null,
+                MediaStore.Images.Media.DISPLAY_NAME + "= ?",
+                new String[] {path.substring(path.lastIndexOf("/") + 1)},
+                null);
+
+        Uri uri = null;
+        if(cursor.moveToFirst()) {
+            uri = ContentUris.withAppendedId(mediaUri,
+                    cursor.getLong(cursor.getColumnIndex(MediaStore.Images.Media._ID)));
+        }
+        cursor.close();
+        return uri;
     }
 }
