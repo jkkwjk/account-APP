@@ -39,6 +39,9 @@ public class AccountCountFragment extends Fragment {
     private ArrayAdapter adapterDay;
     private ArrayAdapter adapterMonth;
     private ArrayAdapter adapterYear;
+
+    private int pos_unit = 0;
+    private List<AccountInfo> accountInfos;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -71,31 +74,14 @@ public class AccountCountFragment extends Fragment {
         adapterDay = new ArrayAdapter (getActivity(),android.R.layout.simple_spinner_item,day);
         adapterMonth.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         adapterYear.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-
     }
     private void initData(){
         Bundle bundle = getArguments();
-        List<AccountInfo> accountInfos = (ArrayList<AccountInfo>)bundle.getSerializable("account");
+        accountInfos = (ArrayList<AccountInfo>)bundle.getSerializable("account");
 
         Map<String,List<SliceValue>> map = getDataByMonth(accountInfos,Calendar.getInstance().get(Calendar.MONTH)+1);
 
-        PieChartData data = new PieChartData(map.get("支出"));
-        data.setHasLabels(true);
-
-        data.setHasLabelsOutside(true);
-        data.setHasCenterCircle(true);
-        data.setCenterText1("支出");
-        data.setCenterText1FontSize(20);
-        pieChartView_out.setPieChartData(data);
-
-        data = new PieChartData(map.get("收入"));
-        data.setHasLabels(true);
-
-        data.setHasLabelsOutside(true);
-        data.setHasCenterCircle(true);
-        data.setCenterText1("收入");
-        data.setCenterText1FontSize(20);
-        pieChartView_in.setPieChartData(data);
+        setData(map);
     }
 
     private void initListener(){
@@ -105,12 +91,18 @@ public class AccountCountFragment extends Fragment {
                 switch (position){
                     case 0:
                         spinner_value.setAdapter(adapterMonth);
+                        spinner_value.setSelection(Calendar.getInstance().get(Calendar.MONTH),true);
+                        pos_unit = 0;
                         break;
                     case 1:
                         spinner_value.setAdapter(adapterYear);
+                        spinner_value.setSelection(Calendar.getInstance().get(Calendar.YEAR)-2014,true);
+                        pos_unit = 1;
                         break;
                     case 2:
                         spinner_value.setAdapter(adapterDay);
+                        spinner_value.setSelection(Calendar.getInstance().get(Calendar.DAY_OF_MONTH)-1,true);
+                        pos_unit = 2;
                         break;
                     default:break;
                 }
@@ -124,7 +116,17 @@ public class AccountCountFragment extends Fragment {
         spinner_value.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                Log.d("12231123",String.valueOf(position));
+                switch (pos_unit){
+                    case 0:
+                        setData(getDataByMonth(accountInfos,Integer.parseInt(adapterMonth.getItem(position).toString())-1));
+                        break;
+                    case 1:
+                        setData(getDataByYear(accountInfos,Integer.parseInt(adapterYear.getItem(position).toString())));
+                        break;
+                    case 2:
+                        setData(getDataByDay(accountInfos,Integer.parseInt(adapterDay.getItem(position).toString())-1));
+                        break;
+                }
             }
 
             @Override
@@ -228,5 +230,25 @@ public class AccountCountFragment extends Fragment {
         ret.put("收入",value_in);
         ret.put("支出",value_out);
         return ret;
+    }
+
+    private void setData(Map<String,List<SliceValue>> map){
+        PieChartData data = new PieChartData(map.get("支出"));
+        data.setHasLabels(true);
+
+        data.setHasLabelsOutside(true);
+        data.setHasCenterCircle(true);
+        data.setCenterText1("支出");
+        data.setCenterText1FontSize(20);
+        pieChartView_out.setPieChartData(data);
+
+        data = new PieChartData(map.get("收入"));
+        data.setHasLabels(true);
+
+        data.setHasLabelsOutside(true);
+        data.setHasCenterCircle(true);
+        data.setCenterText1("收入");
+        data.setCenterText1FontSize(20);
+        pieChartView_in.setPieChartData(data);
     }
 }

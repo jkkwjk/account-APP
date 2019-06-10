@@ -84,7 +84,7 @@ public class MainActivity extends AppCompatActivity {
         viewInit();
         setListener();
 
-        navigation.findViewById(R.id.navigation_all_account).performClick();
+        navigation.findViewById(R.id.navigation_all_account).performClick(); //默认选中首页
     }
 
     private void viewInit(){
@@ -97,22 +97,30 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        switch (requestCode){
-            case 0:
-            {
-                if (resultCode==RESULT_OK){
-                    // TODO: 2019/6/8 加入数据 
+        // 添加或修改 窗口返回
+        if (resultCode==RESULT_OK){
+            switch (requestCode){
+                case 0:
+                {
+                    AccountInfo accountInfo = (AccountInfo)data.getSerializableExtra("account");
+                    accountInfos.add(accountInfo);
                 }
-            }
                 break;
-            case 1:
-            {
-
-            }
+                case 1:
+                {
+                    AccountInfo accountInfo = ((AccountInfo)data.getSerializableExtra("account"));
+                    for (int i=0; i<accountInfos.size(); ++i){
+                        if (accountInfos.get(i).getUuid().equals(accountInfo.getUuid())){
+                            accountInfos.remove(i); accountInfos.add(i,accountInfo);
+                            break;
+                        }
+                    }
+                }
                 break;
+            }
         }
 
-        navigation.findViewById(R.id.navigation_all_account).performClick();
+        navigation.findViewById(R.id.navigation_all_account).performClick(); //选中首页
         super.onActivityResult(requestCode, resultCode, data);
     }
 

@@ -64,11 +64,6 @@ public class AccountManageActivity extends AppCompatActivity {
         mEditViewWithPic.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-//                Log.d("start"," ");
-//                Log.d("start","length   "+s.length());
-//                Log.d("start","start   "+start);
-//                Log.d("start","count   "+count);
-//                Log.d("start","after   "+after);
                 if(after<count){
                     char ident=s.charAt(start);
                     int number=0;
@@ -98,12 +93,7 @@ public class AccountManageActivity extends AppCompatActivity {
         editmoney=(EditText)findViewById(R.id.edit_account_money);
         buttoninster=(Button)findViewById(R.id.button_account_image);
         editname=(EditText)findViewById(R.id.button_account_time);
-//        edittime.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//
-//            }
-//        });
+
         buttoninster.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -117,9 +107,7 @@ public class AccountManageActivity extends AppCompatActivity {
         buttonback.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(AccountManageActivity.this, MainActivity.class);
-                startActivity(intent);
-                AccountManageActivity.this.finish();
+                finish();
             }
         });
         buttonsubmit=(Button)findViewById(R.id.button_account_submit);
@@ -145,7 +133,8 @@ public class AccountManageActivity extends AppCompatActivity {
 //                ToastShow.show(context,"添加一个账单成功");
 //                Intent intent = new Intent(AccountManageActivity.this, MainActivity.class);
 //                intent.putExtra("user",);
-//                startActivity(intent);
+//                setResult(...,intent);
+                //finish();
 //                AccountManageActivity.this.finish();
             }
         });

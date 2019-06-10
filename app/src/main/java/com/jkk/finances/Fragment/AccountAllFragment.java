@@ -1,5 +1,6 @@
 package com.jkk.finances.Fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
@@ -11,6 +12,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.jkk.finances.Activity.AccountManageActivity;
 import com.jkk.finances.Model.AccountInfo;
 import com.jkk.finances.R;
 import com.jkk.finances.Utils.StampDate;
@@ -42,6 +44,8 @@ public class AccountAllFragment extends Fragment {
         mRecyclerView.setAdapter(accountAdapter);
     }
     private class AccountHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+        AccountInfo accountInfo;
+
         private TextView textView_textView_account_add_time;
         private TextView textView_textView_account_type;
         private TextView textView_textView_account_money;
@@ -56,6 +60,7 @@ public class AccountAllFragment extends Fragment {
             itemView.setOnClickListener(this);
         }
         public void bind(AccountInfo accountInfo){
+            this.accountInfo = accountInfo;
             textView_textView_account_used.setText(accountInfo.getUseName());
             textView_textView_account_type.setText(accountInfo.getType());
             textView_textView_account_money.setText(String.valueOf(accountInfo.getMoney()));
@@ -63,7 +68,9 @@ public class AccountAllFragment extends Fragment {
         }
         @Override
         public void onClick(View v) {
-
+            Intent intent = new Intent(getContext(), AccountManageActivity.class);
+            intent.putExtra("account",accountInfo);
+            startActivityForResult(intent,1);
         }
     }
 
