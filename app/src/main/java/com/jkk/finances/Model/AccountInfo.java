@@ -61,6 +61,17 @@ public class AccountInfo implements Serializable {
         }
     }
 
+    public AccountInfo(String uuid, String useName, Float money, String time, String type, Integer more, String str, String url) {
+        this.uuid = uuid;
+        this.useName = useName;
+        this.money = money;
+        this.time = time;
+        this.type = type;
+        this.more = more;
+        this.str = str;
+        this.url = url;
+    }
+
     public AccountInfo(String useName, Float money, String time, String type, Integer more, String str, String url) {
         this.uuid = UUIDutil.getUUID();
         this.useName = useName;
