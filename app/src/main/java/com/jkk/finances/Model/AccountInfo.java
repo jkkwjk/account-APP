@@ -70,6 +70,10 @@ public class AccountInfo implements Serializable {
         this.more = more;
         this.str = str;
         this.url = url;
+        //more=0只有文字
+        //more=1只有图片
+        //more=2图片加文字
+        //more=null没有
     }
     public static ArrayList<AccountInfo> get(){
         ArrayList<AccountInfo> list = new ArrayList<>();

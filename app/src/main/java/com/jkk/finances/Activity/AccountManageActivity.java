@@ -22,6 +22,7 @@ import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.alibaba.fastjson.JSON;
 import com.jkk.finances.EditViewWithPic;
 import com.jkk.finances.Model.AccountInfo;
 import com.jkk.finances.Model.User;
@@ -45,21 +46,18 @@ public class AccountManageActivity extends AppCompatActivity {
     private Button buttonback;
     private Button buttonsubmit;
     private AccountInfo mAccountInfo;
-    private ArrayList<String> mArrayList;
+    private ArrayList<String> mArrayList = new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_account_manage);
 
         this.context=this;
+
         mTextView=(TextView)findViewById(R.id.textView_account_text);
         Intent intent=getIntent();
         mAccountInfo = (AccountInfo) intent.getSerializableExtra("account");
-        if(mAccountInfo==null){
-            mTextView.setText("在这里，添加你的账单");
-        }else{
-            mTextView.setText("在这里，修改你的账单");
-        }
+
         mEditViewWithPic = (EditViewWithPic) findViewById(R.id.edit_account_image);
         mEditViewWithPic.addTextChangedListener(new TextWatcher() {
             @Override
@@ -77,10 +75,12 @@ public class AccountManageActivity extends AppCompatActivity {
                     }
                     for (int i=0; i<str.length(); ++i){
                         if (str.charAt(i)==ch){
-                            Log.d("jkk33", String.format("删除%s图片", num++));
+                            Log.d("jkk33", String.format("删除%s图片", num++));//num++为位置
+                            mArrayList.remove(num++);
                         }
                     }
                 }
+
             }
 
             @Override
@@ -119,16 +119,36 @@ public class AccountManageActivity extends AppCompatActivity {
             public void onClick(View v) {
                 String usename=editname.getText().toString();
                 String number=editmoney.getText().toString();
+                Editable editable=mEditViewWithPic.getText();
                 if(checknumber(number)) {
                     float money=Float.parseFloat(number);
                     RadioGroup radioGroup1 =(RadioGroup) findViewById(R.id.RG_account_type);
                     String type =((RadioButton)findViewById(radioGroup1.getCheckedRadioButtonId())).getText().toString();
                     RadioGroup radioGroup2 =(RadioGroup) findViewById(R.id.RG_account_getout);
                     String getout =((RadioButton)findViewById(radioGroup2.getCheckedRadioButtonId())).getText().toString();
+                    if(getout.equals("支出")){
+                        money=-money;
+                    }
                     String time=edittime.getText().toString();
                     //String
                     if (mAccountInfo == null){
                         mAccountInfo=new AccountInfo();
+                    }
+                    mAccountInfo.setMoney(money);
+                    mAccountInfo.setUseName(usename);
+                    mAccountInfo.setType(type);
+                    if(!(editable==null||editable.toString().equals(""))){
+                        mAccountInfo.setStr(editable.toString());
+                        if(mArrayList.size()==0){
+                            mAccountInfo.setMore(0);
+                        }else{
+                            JSON.toJSONString(mArrayList);
+                            if(editable.length()>mArrayList.size()){
+                                mAccountInfo.setMore(2);
+                            }else {
+                                mAccountInfo.setMore(1);
+                            }
+                        }
                     }
                 }else{
                     ToastShow.show(context,"请正确填写金额");
@@ -153,6 +173,7 @@ public class AccountManageActivity extends AppCompatActivity {
                 resizeBitmap(bitmap);
                 mEditViewWithPic.append("\n");
                 mEditViewWithPic.insertDrawable(bitmap);
+                mArrayList.add(img_url);
             } catch (FileNotFoundException e) {
                 Log.e("Exception", e.getMessage(),e);
             }
@@ -184,6 +205,18 @@ public class AccountManageActivity extends AppCompatActivity {
 
         }finally {
             return ret;
+        }
+    }
+    public void startchange(AccountInfo accountInfo){
+        if(mAccountInfo!=null){
+            mTextView.setText("在这里，修改你的账单");
+            editname.setText(mAccountInfo.getUseName());
+            editmoney.setText(mAccountInfo.getMoney().toString());
+            //得到时间并显示
+            //得到url和more值在mEditViewWithPic中显示
+
+        }else{
+            mTextView.setText("在这里，添加你的账单");
         }
     }
 }
