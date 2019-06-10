@@ -8,8 +8,10 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
+import android.os.Build;
 import android.provider.MediaStore;
 import android.support.annotation.Nullable;
+import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
@@ -26,6 +28,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.jkk.finances.EditViewWithPic;
 import com.jkk.finances.Model.AccountInfo;
 import com.jkk.finances.Model.User;
@@ -33,8 +36,10 @@ import com.jkk.finances.R;
 import com.jkk.finances.TInputConnection;
 import com.jkk.finances.Utils.ToastShow;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -71,7 +76,7 @@ public class AccountManageActivity extends AppCompatActivity {
         });
         Intent intent=getIntent();
         mAccountInfo = (AccountInfo) intent.getSerializableExtra("account");
-        startchange(mAccountInfo);
+
         mEditViewWithPic = (EditViewWithPic) findViewById(R.id.edit_account_image);
         mEditViewWithPic.addTextChangedListener(new TextWatcher() {
             @Override
@@ -109,7 +114,10 @@ public class AccountManageActivity extends AppCompatActivity {
         editname=(EditText)findViewById(R.id.edit_account_name);
         editmoney=(EditText)findViewById(R.id.edit_account_money);
         buttoninster=(Button)findViewById(R.id.button_account_image);
-        editname=(EditText)findViewById(R.id.button_account_time);
+        radioGroup1 =(RadioGroup) findViewById(R.id.RG_account_type);
+        radioGroup2 =(RadioGroup) findViewById(R.id.RG_account_getout);
+        startchange();
+        //editname=(EditText)findViewById(R.id.button_account_time);
 
         buttoninster.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -136,27 +144,27 @@ public class AccountManageActivity extends AppCompatActivity {
                 Editable editable=mEditViewWithPic.getText();
                 if(checknumber(number)) {
                     float money=Float.parseFloat(number);
-                    radioGroup1 =(RadioGroup) findViewById(R.id.RG_account_type);
+
                     String type =((RadioButton)findViewById(radioGroup1.getCheckedRadioButtonId())).getText().toString();
-                    radioGroup2 =(RadioGroup) findViewById(R.id.RG_account_getout);
                     String getout =((RadioButton)findViewById(radioGroup2.getCheckedRadioButtonId())).getText().toString();
                     if(getout.equals("支出")){
                         money=-money;
                     }
-                    String time=timeStream;
-                    //String
+                    //String time=timeStream;
+                    String time = String.valueOf((new Date()).getTime()/1000);
                     if (mAccountInfo == null){
                         mAccountInfo=new AccountInfo();
                     }
                     mAccountInfo.setMoney(money);
                     mAccountInfo.setUseName(usename);
                     mAccountInfo.setType(type);
+                    mAccountInfo.setTime(time);
                     if(!(editable==null||editable.toString().equals(""))){
                         mAccountInfo.setStr(editable.toString());
                         if(mArrayList.size()==0){
                             mAccountInfo.setMore(0);
                         }else{
-                            JSON.toJSONString(mArrayList);
+                            mAccountInfo.setUrl(JSON.toJSONString(mArrayList));
                             if(editable.length()>mArrayList.size()){
                                 mAccountInfo.setMore(2);
                             }else {
@@ -164,6 +172,7 @@ public class AccountManageActivity extends AppCompatActivity {
                             }
                         }
                     }
+                    // 添加数据
                     Intent intent = new Intent();
                     intent.putExtra("account",mAccountInfo);
                     setResult(RESULT_OK,intent);
@@ -171,12 +180,6 @@ public class AccountManageActivity extends AppCompatActivity {
                 }else{
                     ToastShow.show(context,"请正确填写金额");
                 }
-//                ToastShow.show(context,"添加一个账单成功");
-//                Intent intent = new Intent(AccountManageActivity.this, MainActivity.class);
-//                intent.putExtra("user",);
-//                setResult(...,intent);
-                //finish();
-//                AccountManageActivity.this.finish();
             }
         });
     }
@@ -191,7 +194,7 @@ public class AccountManageActivity extends AppCompatActivity {
                 resizeBitmap(bitmap);
                 mEditViewWithPic.append("\n");
                 mEditViewWithPic.insertDrawable(bitmap);
-                mArrayList.add(img_url);
+                mArrayList.add(uri.getScheme()+"://"+uri.getEncodedAuthority()+uri.getEncodedPath());
             } catch (FileNotFoundException e) {
                 Log.e("Exception", e.getMessage(),e);
             }
@@ -225,7 +228,7 @@ public class AccountManageActivity extends AppCompatActivity {
             return ret;
         }
     }
-    public void startchange(AccountInfo accountInfo){
+    public void startchange(){
         if(mAccountInfo!=null){
             mTextView.setText("在这里，修改你的账单");
             editname.setText(mAccountInfo.getUseName());
@@ -240,7 +243,6 @@ public class AccountManageActivity extends AppCompatActivity {
                     if(type.equals("银行卡")){
                         radioGroup1.check(R.id.RB_account_3);
                     }else{
-
                         radioGroup1.check(R.id.RB_account_4);
                     }
                 }
@@ -250,7 +252,10 @@ public class AccountManageActivity extends AppCompatActivity {
             }else{
                 radioGroup2.check(R.id.RB_account_6);
             }
-            mArrayList =(ArrayList<String>) JSON.parse(mAccountInfo.getUrl());
+            JSONArray jsonArray = (JSONArray) JSON.parse(mAccountInfo.getUrl());
+            for (Object o : jsonArray) {
+                mArrayList.add(o.toString());
+            }
             if(mAccountInfo.getMore()!=null){
                 String str=mAccountInfo.getStr();
                 int number=0;
@@ -258,7 +263,7 @@ public class AccountManageActivity extends AppCompatActivity {
                     if(str.charAt(i)==5){
                         ContentResolver cr = this.getContentResolver();
                         try {
-                            Uri url = getMediaUriFromPath(context,mArrayList.get(number));
+                            Uri url = Uri.parse(mArrayList.get(number));
                             number=number+1;
                             Bitmap bitmap = BitmapFactory.decodeStream(cr.openInputStream(url));
                             resizeBitmap(bitmap);
@@ -277,20 +282,17 @@ public class AccountManageActivity extends AppCompatActivity {
             mTextView.setText("在这里，添加你的账单");
         }
     }
-    public static Uri getMediaUriFromPath(Context context, String path) {
-        Uri mediaUri = MediaStore.Images.Media.EXTERNAL_CONTENT_URI;
-        Cursor cursor = context.getContentResolver().query(mediaUri,
-                null,
-                MediaStore.Images.Media.DISPLAY_NAME + "= ?",
-                new String[] {path.substring(path.lastIndexOf("/") + 1)},
-                null);
-
-        Uri uri = null;
-        if(cursor.moveToFirst()) {
-            uri = ContentUris.withAppendedId(mediaUri,
-                    cursor.getLong(cursor.getColumnIndex(MediaStore.Images.Media._ID)));
+    public Uri getUriFromFilePath(Context ctx, File filePath) {
+        Uri requirdUri = null;
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.N) {
+            requirdUri = FileProvider.getUriForFile(ctx,
+                    ctx.getApplicationContext().getPackageName() + PROVIDER_FILE_EXTENSION,
+                    filePath);
+        } else {
+            requirdUri = Uri.fromFile(filePath);
         }
-        cursor.close();
-        return uri;
+
+        return requirdUri;
     }
+
 }

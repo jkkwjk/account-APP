@@ -92,10 +92,6 @@ public class AccountInfo implements Serializable {
         list.add(new AccountInfo("买阿萨德",-100F, String.valueOf(new Date().getTime()/1000),"微信"));
         list.add(new AccountInfo("买",6.88F, String.valueOf(new Date().getTime()/1000),"现金"));
         list.add(new AccountInfo("阿萨德啊",1057F, String.valueOf(new Date().getTime()/1000),"现金"));
-        list.add(new AccountInfo("阿萨德啊",3F, String.valueOf(new Date().getTime()/1000),"微信"));
-        list.add(new AccountInfo("阿萨德啊",-1009.1F, String.valueOf(new Date().getTime()/1000),"银行卡"));
-        list.add(new AccountInfo("阿萨德啊",666F, String.valueOf(new Date().getTime()/1000),"微信"));
-        list.add(new AccountInfo("阿萨德啊",-308.6F, String.valueOf(new Date().getTime()/1000),"支付宝"));
         return list;
     }
     public AccountInfo() { this.uuid = UUIDutil.getUUID(); }
